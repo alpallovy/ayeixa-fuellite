@@ -15,8 +15,8 @@ Continuous autonomous agent execution loops consume substantial token volumes. I
 ## 2. Core Architecture
 FuelLite provides four synchronized modules:
 
-1. **CostEstimator**: Computes prompt, completion, and cache token costs in USD using exact IEEE 754 float precision across tier structures.
-2. **ProviderArbitrageRouter**: Dynamically ranks model providers (Gemini Flash free tier, Groq, Cerebras, Chutes), prioritizing verified zero-cost tiers before falling back to low-cost paid endpoints.
+1. **CostEstimator**: Deterministic numeric cost estimation using token counts and configured rates, with reported USD values rounded to six decimal places.
+2. **ProviderArbitrageRouter**: Ranks configured model providers, prioritizing providers configured as free-tier (`isFreeTier: true`) before falling back to lower-cost paid endpoints.
 3. **TokenBudgetTracker**: Tracks cumulative tenant and session token budgets with hard-stop limits and threshold warning alarms.
 4. **FailoverExecutor**: Transparently handles provider outages and rate limits with exponential backoff ($2^n \times \text{base}$) and cooldown recovery.
 
@@ -24,8 +24,8 @@ FuelLite provides four synchronized modules:
 
 ## 3. Implemented Capabilities & Test Verification
 Verified with hermetic unit tests:
-- **Cost Estimation**: Accurate USD calculation across token counts (`tests/cost.test.ts`).
-- **Arbitrage Routing**: Prioritizing free tier availability and latency health (`tests/arbitrage.test.ts`).
+- **Cost Estimation**: Six-decimal USD calculation across token counts (`tests/cost.test.ts`).
+- **Arbitrage Routing**: Prioritizing configured free-tier providers and lowest cost (`tests/arbitrage.test.ts`).
 - **Budget Tracking**: Hard quota enforcement and spend recording (`tests/budget.test.ts`).
 - **Failover Logic**: HTTP 429/503 retry backoff and provider hopping (`tests/failover.test.ts`).
 
@@ -65,7 +65,7 @@ console.log("Remaining Budget:", tracker.getRemainingBudget("tenant-alpha"));
 
 ## 5. Limitations & Roadmap
 - Pre-release `v0.1.0-alpha`.
-- Built-in price models currently cover standard supported tiers; custom provider configurations can be passed programmatically.
+- Provider rates are statically configured; dynamic live pricing synchronizers are planned on the roadmap.
 - Public npm publication is pending.
 
 ---

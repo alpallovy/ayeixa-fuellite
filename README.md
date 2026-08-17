@@ -44,3 +44,6 @@ tracker.recordSpend("tenant-1", cost.totalCostUsd, 1900);
 
 ## License
 Distributed under the **MIT** License. See `LICENSE` for details.
+
+## Technical Deep Dive
+Read the full launch technical article: [`docs/blog/introducing-ayeixa-fuellite.md`](docs/blog/introducing-ayeixa-fuellite.md)

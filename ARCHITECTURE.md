@@ -1,16 +1,14 @@
-# Architecture Specification: Ayeixa FuelLite
+# Architecture: Ayeixa FuelLite
 
-## System Overview
-Architecture overview for Ayeixa FuelLite
+## Overview
+FuelLite provides precise cost accounting and dynamic provider failover for high-throughput AI agent clusters.
 
-## Architecture Diagram (Mermaid)
+## System Topology
 ```mermaid
 flowchart TD
-    Client["Client Application / Runtime"] --> Router["Ayeixa FuelLite Core"]
-    Router --> Engine["Execution & Boundary Engine"]
-    Engine --> Output["Verified Output / State"]
+    Client["LLM Request"] --> Router["Provider Arbitrage Router"]
+    Router --> Budget["Token Budget & Rate Limiter"]
+    Budget --> Failover["Failover Executor & Backoff"]
+    Failover --> Providers["Provider Pool (Gemini / Groq / Cerebras)"]
+    Providers --> Estimator["Cost Estimator & Metrics Tracker"]
 ```
-
-## Design Guarantees
-- **Permissive & Standalone**: Operates hermetically without proprietary enterprise lock-in.
-- **Fail-Closed**: Rejects malformed or untrusted inputs at boundary layer.
